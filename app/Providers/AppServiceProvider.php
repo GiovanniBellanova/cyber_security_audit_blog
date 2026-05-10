@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
+//CHALLENGE 1
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -31,5 +36,10 @@ class AppServiceProvider extends ServiceProvider
             $tags = Tag::all();
             View::share(['tags' => $tags]);
         }
+
+        // CHALLENGE 1  Definizione del Rate Limiter per la ricerca
+        RateLimiter::for('search_limiter', function (Request $request) {
+            return Limit::perMinute(10)->by($request->ip());
+        });
     }
 }
