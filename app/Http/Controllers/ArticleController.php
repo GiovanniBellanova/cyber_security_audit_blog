@@ -76,6 +76,8 @@ class ArticleController extends Controller implements HasMiddleware
             $article->tags()->attach($newTag);
         }
 
+        Log::info("L'utente " . Auth::user()->name . " (ID: " . Auth::user()->id . ") ha CREATO l'articolo: '" . $article->title . "' (ID: " . $article->id . ")");
+
         return redirect(route('homepage'))->with('message', 'Articolo creato con successo');
     }
 
@@ -143,6 +145,9 @@ class ArticleController extends Controller implements HasMiddleware
         }
         $article->tags()->sync($newTags);
 
+        Log::info("L'utente " . Auth::user()->name . " (ID: " . Auth::user()->id . ") ha MODIFICATO l'articolo: '" . $article->title . "' (ID: " . $article->id . ")");
+
+
         return redirect(route('writer.dashboard'))->with('message', 'Articolo modificato con successo');
     }
 
@@ -151,10 +156,16 @@ class ArticleController extends Controller implements HasMiddleware
      */
     public function destroy(Article $article)
     {
+        $title = $article->title;
+        $id = $article->id;
+
         foreach ($article->tags as $tag) {
             $article->tags()->detach($tag);
         }
+        
         $article->delete();
+
+        Log::info("L'utente " . Auth::user()->name . " (ID: " . Auth::user()->id . ") ha ELIMINATO l'articolo: '" . $title . "' (ID: " . $id . ")");
         
         return redirect()->back()->with('message', 'Articolo cancellato con successo');
     }

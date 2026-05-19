@@ -9,6 +9,7 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class PublicController extends Controller implements HasMiddleware
 {
@@ -59,6 +60,9 @@ class PublicController extends Controller implements HasMiddleware
         }
 
         $user->update();
+
+        Log::info("L'utente " . $user->name . " (ID: " . $user->id . ") ha inviato una richiesta per il ruolo: " . strtoupper($role));
+        
         return redirect(route('homepage'))->with('message', 'Mail inviata con successo!');
     }
 }
