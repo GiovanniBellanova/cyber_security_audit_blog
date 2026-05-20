@@ -5,6 +5,9 @@ namespace App\Services;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 class HttpService
 {
     protected $client;
@@ -32,6 +35,16 @@ class HttpService
             return 'Domain not allowed';
         }
 
+        // --- MITIGAZIONE CHALLENGE 4: CONTROLLO RUOLI PER ACCESSO INTERNO ---
+        // Se l'host è 'internal.finance', controlliamo i privilegi dell'utente
+        if ($parsedUrl['host'] === 'internal.finance') {
+            if (!Auth::user() || !Auth::user()->is_admin) {
+                // Logghiamo il tentativo per garantire accountability [3]
+                Log::warning("SSRF PREVENTION: Utente non autorizzato (" . (Auth::user()->name ?? 'Guest') . ") ha tentato l'accesso a: " . $url);
+            
+            return 'Access Denied: You do not have permission to access internal resources.';
+        }
+    }
         // Aggiungi l'intestazione Referer per le richieste al server locale
         $options['headers'] = ['Referer' => $this->refererHeader];
 
