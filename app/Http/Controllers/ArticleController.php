@@ -53,10 +53,13 @@ class ArticleController extends Controller implements HasMiddleware
             'tags' => 'required'
         ]);
 
+        // MITIGAZIONE CHALLENGE 5: Sanitizzazione del body
+        $cleanBody = strip_tags($request->body);
+
         $article = Article::create([
             'title' => $request->title,
             'subtitle' => $request->subtitle,
-            'body' => $request->body,
+            'body' => $cleanBody,
             'image' => $request->file('image')->store('public/images'),
             'category_id' => $request->category,
             'user_id' => Auth::user()->id,
