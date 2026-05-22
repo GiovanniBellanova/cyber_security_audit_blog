@@ -7,6 +7,8 @@ use App\Http\Controllers\WriterController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\RevisorController;
 
+use App\Http\Controllers\ProfileController;
+
 // Public routes
 Route::get('/', [PublicController::class, 'homepage'])->name('homepage');
 Route::get('/careers', [PublicController::class, 'careers'])->name('careers');
@@ -16,6 +18,12 @@ Route::get('/articles/index', [ArticleController::class, 'index'])->name('articl
 Route::get('/articles/show/{article:slug}', [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/articles/category/{category}', [ArticleController::class, 'byCategory'])->name('articles.byCategory');
 Route::get('/articles/user/{user}', [ArticleController::class, 'byUser'])->name('articles.byUser');
+
+//challege6
+
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
+
+Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
 
 //CHALLENGE 1  Limitazione richieste
 Route::get('/articles/search', [ArticleController::class, 'articleSearch'])

@@ -20,9 +20,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_admin',
-        'is_revisor',
-        'is_writer'
+        //challege6 mitigazione
+        // 'is_admin',
+        // 'is_revisor',
+        // 'is_writer'
     ];
 
     /**
